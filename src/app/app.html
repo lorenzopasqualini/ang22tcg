@@ -1,0 +1,99 @@
+<main class="board-container">
+  <!-- Header Bar -->
+  <header class="board-header">
+    <div class="header-titles">
+      <h1 class="app-title">Pokémon Card Board</h1>
+      <p class="app-subtitle">Base Set Collection</p>
+    </div>
+
+    <!-- Search Controls -->
+    <div class="search-bar">
+      <input
+        id="card-search-input"
+        type="search"
+        placeholder="Search Pokémon or #..."
+        [value]="searchTerm()"
+        (input)="onSearch($event)"
+        aria-label="Search Pokémon cards"
+      />
+      <span class="count-badge" id="card-count-badge">
+        {{ filteredCards().length }} cards
+      </span>
+    </div>
+  </header>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="status-box" id="loading-state">
+      <div class="spinner"></div>
+      <p>Loading cards from TCG API...</p>
+    </div>
+  }
+
+  <!-- Empty Results State -->
+  @if (!isLoading() && filteredCards().length === 0) {
+    <div class="status-box" id="empty-state">
+      <p>No Pokémon found matching "{{ searchTerm() }}".</p>
+      <button class="action-btn" (click)="searchTerm.set('')">Reset search</button>
+    </div>
+  }
+
+  <!-- Display Board Grid -->
+  @if (!isLoading() && filteredCards().length > 0) {
+    <section class="card-grid" id="cards-grid" aria-label="Pokémon cards grid">
+      @for (card of filteredCards(); track card.id) {
+        <article
+          class="card-item"
+          [id]="'card-' + card.id"
+          role="button"
+          tabindex="0"
+          (click)="openPreview(card)"
+          (keydown.enter)="openPreview(card)"
+        >
+          <div class="card-image-wrapper">
+            @if (card.image) {
+              <img
+                [src]="card.image"
+                [alt]="card.name + ' card'"
+                loading="lazy"
+                class="card-img"
+              />
+            } @else {
+              <div class="card-no-image">No Image</div>
+            }
+          </div>
+          <div class="card-meta">
+            <span class="card-id">#{{ card.localId }}</span>
+            <h2 class="card-name">{{ card.name }}</h2>
+          </div>
+        </article>
+      }
+    </section>
+  }
+
+  <!-- Card Preview Modal -->
+  @if (selectedCard(); as card) {
+    <div class="modal-backdrop" id="preview-modal" (click)="closePreview()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <button
+          class="modal-close-btn"
+          id="modal-close-btn"
+          (click)="closePreview()"
+          aria-label="Close preview"
+        >
+          ✕
+        </button>
+        <div class="modal-card-display">
+          @if (card.image) {
+            <img [src]="card.image" [alt]="card.name" class="modal-img" />
+          }
+        </div>
+        <div class="modal-details">
+          <span class="modal-id">Card #{{ card.localId }}</span>
+          <h2 class="modal-title">{{ card.name }}</h2>
+          <p class="modal-desc">TCG Base Set Collection</p>
+        </div>
+      </div>
+    </div>
+  }
+</main>

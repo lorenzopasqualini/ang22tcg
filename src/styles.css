@@ -1,0 +1,28 @@
+:root {
+  /* Strict 3-color palette */
+  --color-primary: #002255;   /* Clarinet: deep navy for headers, text, and structure */
+  --color-secondary: #2563eb; /* Blue: accents, interactive buttons, badges, highlights */
+  --color-tertiary: #f4f8ff;  /* Tertiary tint: canvas surface, card backgrounds */
+
+  /* Single typography */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-tertiary);
+  color: var(--color-primary);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input {
+  font-family: inherit;
+}
